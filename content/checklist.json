@@ -1,0 +1,231 @@
+{
+  "version": "1.0.0",
+  "data": {
+    "Electra": {
+      "info": "",
+      "list": {
+        "c4210e41-219d-4932-ab44-11b9f4b07763": {
+          "name": "Zwarte electra kabel 1meter",
+          "info": ""
+        },
+        "0e5caeee-2bec-4b10-9ada-ad738c1fa8b6": {
+          "name": "Rode electra kabel 1meter",
+          "info": ""
+        },
+        "0e951db9-fc8a-43c8-ad31-f3ce12390f69": {
+          "name": "Man/vrouw stekkers",
+          "info": ""
+        },
+        "7a10e3ac-aaa5-44a9-ab1f-a3edb58bae08": {
+          "name": "Kabel connectors gelijmd",
+          "info": ""
+        },
+        "20da2525-d188-4131-a0cc-93e1219921ec": {
+          "name": "Multi-meter",
+          "info": ""
+        },
+        "3ffe5c37-d7c6-4e07-8374-0f37e0d3adde": {
+          "name": "Lampje voor/achter",
+          "info": ""
+        },
+        "0003f69b-1a64-49c5-b0e5-7fd1114d7fb6": {
+          "name": "Aan/uit schakelaar",
+          "info": ""
+        },
+        "98f664e6-7c0a-49b6-ad39-a7b04fae2cfa": {
+          "name": "IJzerwaren assortiment",
+          "info": "Bouten, moeren, ringen"
+        }
+      }
+    },
+    "Banden": {
+      "info": "",
+      "list": {
+        "041ff594-5828-4425-8c30-afc4f915def6": {
+          "name": "1x Motion pro beadpro",
+          "info": ""
+        },
+        "c9ac9c88-5654-48f8-a394-1e4bc3fa9a8c": {
+          "name": "1x Motion pro t6 combo set",
+          "info": ""
+        },
+        "1dbd5261-cf38-42a0-8bd5-dc957f4159f8": {
+          "name": "1x Plak/repair set",
+          "info": "Tiptop car en truck plaksetje EN/OF safety seal tubeless repair"
+        },
+        "743790af-55fd-4d74-9606-b927b847c1be": {
+          "name": "1x Binnenband 19 inch",
+          "info": "OF 1x voorband binnen en 1x achterband binnen"
+        },
+        "7f4ec84f-f965-40b5-bd47-1044f950b3ab": {
+          "name": "12 Volt bandenpomp",
+          "info": "OF Lezyne C02 en handpomp"
+        }
+      }
+    },
+    "Ketting": {
+      "info": "",
+      "list": {
+        "e9f01f55-1311-4fae-b53d-f44746bc9b1b": {
+          "name": "Kettingpons",
+          "info": ""
+        },
+        "32d08e63-c3ff-4c89-8809-22178cfe9d6c": {
+          "name": "2x Schakel met visje",
+          "info": "Exact hetzelfde type als de ketting!"
+        },
+        "f5f4a186-4eb4-472c-8581-7b42ffe2b453": {
+          "name": "1x 3 schakels ketting",
+          "info": "Exact hetzelfde type als de ketting!"
+        },
+        "9c926e99-999a-4fb8-9549-2283a886986a": {
+          "name": "Kettingspray/vet/ auto oiler",
+          "info": ""
+        }
+      }
+    },
+    "Noodreparatie": {
+      "info": "Alleen in de maten meenemen die op de motor aanwezig zijn",
+      "list": {
+        "4a0631c0-01ba-46ec-9603-3be4c3852d73": {
+          "name": "Ducttape",
+          "info": ""
+        },
+        "f0921050-b0bd-474c-8ef5-c30bd4091a99": {
+          "name": "Q-bond lijm en filler",
+          "info": ""
+        },
+        "46d70219-b039-4454-975a-2d608ba60108": {
+          "name": "Ontvetter",
+          "info": ""
+        },
+        "55bf642e-d519-4070-a24d-65a7f1a522e1": {
+          "name": "Tie rips plastic",
+          "info": ""
+        },
+        "777b54f7-8d18-4531-bbce-a3cd1f5e7153": {
+          "name": "Tie rips metaal",
+          "info": ""
+        },
+        "4049294d-506c-4fd2-b222-fb0020313248": {
+          "name": "2x Spanband",
+          "info": ""
+        },
+        "c03c8bce-7c60-4fa5-a5a7-cdcbe30ec7b8": {
+          "name": "Kabel reparatiesetje",
+          "info": ""
+        },
+        "88be3d49-c4a4-4729-92de-f9689c81fae1": {
+          "name": "Multi spray",
+          "info": ""
+        },
+        "c9268934-f03b-480b-9327-c06dfcfd5441": {
+          "name": "Anti-lek radiator pil/vloeistof",
+          "info": ""
+        },
+        "ea8d675d-72d8-4f04-aa8b-955f53394e75": {
+          "name": "Schuurpapier",
+          "info": ""
+        }
+      }
+    },
+    "Reserve onderdelen": {
+      "info": "",
+      "list": {
+        "03338be5-49af-4ac5-ba94-936843de61a2": {
+          "name": "Motor olie",
+          "info": ""
+        },
+        "de13a295-796d-48c5-97a4-d2e21b3a28d1": {
+          "name": "Koelvloestof",
+          "info": ""
+        },
+        "fe665b0e-b50b-4bf4-b4b7-88e3002601ca": {
+          "name": "Koppeling hendel",
+          "info": ""
+        },
+        "39c6370e-7225-47ac-a332-862a4c68b662": {
+          "name": "Rem hendel",
+          "info": ""
+        },
+        "5673c26c-54c8-4672-ace0-acad2a246437": {
+          "name": "Schakelpedaal",
+          "info": ""
+        },
+        "1c30d147-0eb0-4b42-a575-b6d0ba15796b": {
+          "name": "Rempedaal",
+          "info": ""
+        },
+        "9ab49b0a-bb0f-40b4-84b5-7a2647ca94ef": {
+          "name": "Koppeling kabel en/of gaskabel(s)",
+          "info": ""
+        },
+        "1b489811-3fb4-4366-ab7a-5f5472d6c7dc": {
+          "name": "1x Olie filter met koperen/rubberen ringen",
+          "info": "Te koop als setje?"
+        },
+        "b830ba87-813a-4d95-9bf5-021d9c125af7": {
+          "name": "1x Brandstof filter",
+          "info": ""
+        },
+        "cd324a72-cd7d-4cdd-b199-daf56c4f1b82": {
+          "name": "?x Luchtfilter",
+          "info": "Geolied"
+        },
+        "947d56b9-1cca-47cc-822f-9cb1441c1bff": {
+          "name": "?x Luchtfilter netjes",
+          "info": ""
+        },
+        "274b9d16-571e-450a-9d16-9947c692bac9": {
+          "name": "Filterolie",
+          "info": ""
+        },
+        "ac42ac15-5ab1-4224-b5b4-5f08ce9fae0f": {
+          "name": "Bougie (per cilinder)",
+          "info": ""
+        }
+      }
+    },
+    "EHBO": {
+      "info": "",
+      "list": {
+        "87ae0c96-8035-41ad-b8f3-16a183cafd9c": {
+          "name": "2 x alu deken",
+          "info": ""
+        },
+        "453cd913-0b22-484b-bf57-e21b9a705a02": {
+          "name": "Traumazwachtel",
+          "info": ""
+        },
+        "7450932f-c4d3-4741-8656-5f74d10de255": {
+          "name": "Nood bivakzak",
+          "info": ""
+        },
+        "7e81fa52-3b8b-4886-8931-08b4cf061b36": {
+          "name": "? liter water",
+          "info": ""
+        },
+        "25f9aaf3-8714-48af-8acc-431779f4f224": {
+          "name": "Waterzuivering",
+          "info": ""
+        },
+        "514fbb4f-e29c-4fc5-81f5-53d7207b228a": {
+          "name": "Hechtplijster/zipstitch",
+          "info": ""
+        },
+        "cfbf90e4-9be2-4f60-86e5-9fe743360541": {
+          "name": "Desinfectie 3% peroxide oplossing",
+          "info": ""
+        },
+        "50efd958-5f5b-4fce-87bd-479f7d0a0d49": {
+          "name": "Tondel",
+          "info": ""
+        },
+        "f3792d76-e6af-43c6-a55d-a99f3324922e": {
+          "name": "Ontsekingsbron",
+          "info": "Lucifers/aansteker/magnesium fire stick"
+        }
+      }
+    }
+  }
+}
