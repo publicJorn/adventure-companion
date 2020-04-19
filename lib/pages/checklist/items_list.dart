@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class ItemsList extends StatelessWidget {
   final Map items;
   final String section;
+  final Function toggleItem;
 
-  ItemsList(this.items, this.section);
+  ItemsList(this.items, this.section, this.toggleItem);
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +28,11 @@ class ItemsList extends StatelessWidget {
                     },
                   ),
                 ),
-                Icon(
-                  Icons.check_box_outline_blank,
+                IconButton(
+                  onPressed: () {
+                    toggleItem(guid);
+                  },
+                  icon: Icon(Icons.check_box_outline_blank),
                   color: Theme.of(context).disabledColor,
                 ),
               ],

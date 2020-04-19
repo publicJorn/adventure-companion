@@ -77,6 +77,7 @@ class ChecklistPageState extends State<ChecklistPage> {
         return ItemsList(
           _checklist[_selectedSection]['list'],
           _selectedSection,
+          _toggleItem,
         );
       },
     );
@@ -112,5 +113,9 @@ class ChecklistPageState extends State<ChecklistPage> {
         _selectedSection = '';
       });
     }
+  }
+
+  void _toggleItem(String guid) {
+    print('Toggle $guid');
   }
 }
