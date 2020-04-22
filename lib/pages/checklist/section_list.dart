@@ -1,20 +1,20 @@
+import 'package:adventure_companion/db_helpers.dart';
 import 'package:flutter/material.dart';
 
 class SectionList extends StatelessWidget {
-  final Map checklist;
+  final List<ChecklistSection> sections;
   final Function setSelectedSection;
 
-  // OPTIMIZE: passing setSelectedSection be done using InheritedWidget
-  SectionList(this.checklist, this.setSelectedSection);
+  SectionList(this.sections, this.setSelectedSection);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: checklist.length,
+      itemCount: sections.length,
       itemBuilder: (BuildContext context, int i) {
-        String section = checklist.keys.elementAt(i);
-        int subItemsTotal = checklist[section]['list'].keys.length;
-        String title = '$section (?/$subItemsTotal)';
+        int checked = sections[i].itemsChecked;
+        int total = sections[i].itemsTotal;
+        String sectionText = '${sections[i].name} ($checked/$total)';
 
         return Column(
           children: <Widget>[
@@ -23,9 +23,9 @@ class SectionList extends StatelessWidget {
                 Expanded(
                   // This child fills available space
                   child: ListTile(
-                    title: Text(title),
+                    title: Text(sectionText),
                     onTap: () {
-                      setSelectedSection(section);
+                      setSelectedSection(sections[i].guid);
                     },
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
+// import 'dart:convert';
 
+import '../../db_helpers.dart';
 import 'section_list.dart';
 import 'items_list.dart';
 
@@ -12,8 +13,10 @@ class ChecklistPage extends StatefulWidget {
 }
 
 class ChecklistPageState extends State<ChecklistPage> {
-  Map _checklist = new Map();
-  String _selectedSection = '';
+  DB db;
+  List<ChecklistSection> _sections = new List();
+  Future<List<ChecklistItem>> _itemsFuture;
+  int _selectedSectionId;
   PageController _pageController;
 
   @override
@@ -23,7 +26,7 @@ class ChecklistPageState extends State<ChecklistPage> {
     // TODO: preload when app starts up
     _loadChecklist(context);
     _pageController = PageController(
-      initialPage: _selectedSection.isEmpty ? 0 : 1,
+      initialPage: _selectedSectionId ?? 0,
     );
   }
 
@@ -37,7 +40,7 @@ class ChecklistPageState extends State<ChecklistPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        titleSpacing: _selectedSection.isEmpty ? 16.0 : 0.0,
+        titleSpacing: _selectedSectionId == null ? 16.0 : 0.0,
         title: _makeTitle(),
       ),
       body: _makeBody(),
@@ -45,7 +48,7 @@ class ChecklistPageState extends State<ChecklistPage> {
   }
 
   Widget _makeTitle() {
-    if (_selectedSection.isEmpty) return Text('Checklist');
+    if (_selectedSectionId == null) return Text('Checklist');
 
     return Row(
       children: <Widget>[
@@ -56,66 +59,75 @@ class ChecklistPageState extends State<ChecklistPage> {
           },
         ),
         Expanded(
-          child: Text(_selectedSection),
+          child: Text(_sections[_selectedSectionId].name),
         ),
       ],
     );
   }
 
   Widget _makeBody() {
-    if (_checklist.length == 0) return Container();
+    if (_sections.isEmpty) return Container();
 
     return PageView.builder(
       controller: _pageController,
       physics: NeverScrollableScrollPhysics(),
       itemCount: 2,
       itemBuilder: (BuildContext context, int i) {
-        if (i == 0) return SectionList(_checklist, _setSelectedSection);
+        if (i == 0) return SectionList(_sections, _setSelectedSection);
 
-        if (_selectedSection.isEmpty) return Container();
+        if (_selectedSectionId == null) return Container();
 
-        return ItemsList(
-          _checklist[_selectedSection]['list'],
-          _selectedSection,
-          _toggleItem,
-        );
+        return ItemsList(_itemsFuture, _toggleItem);
       },
     );
   }
 
   void _loadChecklist(context) async {
-    String data = await DefaultAssetBundle.of(context)
-        .loadString('content/checklist.json');
+    db = DB(context: context);
+
+    List<ChecklistSection> sections = await db.getChecklistSections();
 
     setState(() {
-      // OPTIMIZE: use json_serializable
-      _checklist = json.decode(data)['data'];
+      _sections = sections;
     });
   }
 
-  void _setSelectedSection(String section) async {
-    // When animating right, set section immediately
-    if (section.isNotEmpty) {
+  void _setSelectedSection(String guid) async {
+    int sectionId = _sections.indexWhere((section) => section.guid == guid);
+
+    // When animating TO items, set section immediately
+    if (guid.isNotEmpty) {
       setState(() {
-        _selectedSection = section;
+        _itemsFuture = db.getChecklistItems(guid);
+        _selectedSectionId = sectionId;
       });
     }
 
     await _pageController.animateToPage(
-      section.isEmpty ? 0 : 1,
+      guid.isEmpty ? 0 : 1,
       duration: Duration(milliseconds: 200),
       curve: Curves.easeInSine,
     );
 
-    // When animating left, await animation completion (above) before clearing contents
-    if (section.isEmpty) {
+    // When animating FROM items, await animation completion (above) before clearing contents
+    if (guid.isEmpty) {
       setState(() {
-        _selectedSection = '';
+        _itemsFuture = null;
+        _selectedSectionId = null;
       });
     }
   }
 
-  void _toggleItem(String guid) {
-    print('Toggle $guid');
+  void _toggleItem(ChecklistItem item) async {
+    int id;
+
+    item.isChecked = !item.isChecked;
+    id = await db.updateItem(item);
+
+    // TODO: better check and error handling
+    // OPTIMIZE: don't update whole list - see if we can update only the one item
+    if (id > -1) {
+      _itemsFuture = db.getChecklistItems(item.guid);
+    }
   }
 }

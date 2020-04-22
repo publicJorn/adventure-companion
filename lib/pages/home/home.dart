@@ -26,7 +26,7 @@ Deze app is nog in ontwikkeling. Meer content word ooit toegevoegd. 🙂
               style: TextStyle(fontSize: 16),
             ),
             SvgPicture.asset(
-              'assets/logo-adventure-shield.svg',
+              'assets/logo_adventure_shield.svg',
               // color: Color.fromRGBO(15, 169, 138, 1),
               matchTextDirection: true,
             )

@@ -1,19 +1,41 @@
+import 'package:adventure_companion/db_helpers.dart';
 import 'package:flutter/material.dart';
 
 class ItemsList extends StatelessWidget {
-  final Map items;
-  final String section;
+  final Future<List<ChecklistItem>> itemsFuture;
   final Function toggleItem;
 
-  ItemsList(this.items, this.section, this.toggleItem);
+  ItemsList(this.itemsFuture, this.toggleItem);
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: itemsFuture,
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<List<ChecklistItem>> snapshot,
+      ) {
+        Widget child;
+
+        if (snapshot.hasData) {
+          child = _buildItemsList(snapshot.data);
+        } else if (snapshot.hasError) {
+          print('ERROR: loading checklist items =>\n${snapshot.error}');
+          child = Container(child: Text('Error loading checklist items'));
+        } else {
+          child = Container(); // Loading...
+        }
+
+        return child;
+      },
+    );
+  }
+
+  _buildItemsList(List<ChecklistItem> items) {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int i) {
-        String guid = items.keys.elementAt(i);
-        String name = items[guid]['name'];
+        ChecklistItem item = items[i];
 
         return Column(
           children: <Widget>[
@@ -22,18 +44,22 @@ class ItemsList extends StatelessWidget {
                 Expanded(
                   // This child fills available space
                   child: ListTile(
-                    title: Text(name),
+                    title: Text(item.name),
                     onTap: () {
-                      _setSelected(guid);
+                      toggleItem(item);
                     },
                   ),
                 ),
                 IconButton(
                   onPressed: () {
-                    toggleItem(guid);
+                    toggleItem(item);
                   },
-                  icon: Icon(Icons.check_box_outline_blank),
-                  color: Theme.of(context).disabledColor,
+                  icon: Icon(item.isChecked
+                      ? Icons.check_box
+                      : Icons.check_box_outline_blank),
+                  color: item.isChecked
+                      ? Colors.lightGreen
+                      : Theme.of(context).disabledColor,
                 ),
               ],
             ),
@@ -45,9 +71,5 @@ class ItemsList extends StatelessWidget {
         );
       },
     );
-  }
-
-  void _setSelected(guid) {
-    print('Set this one selected: $guid');
   }
 }
