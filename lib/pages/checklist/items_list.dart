@@ -2,36 +2,13 @@ import 'package:adventure_companion/db_helpers.dart';
 import 'package:flutter/material.dart';
 
 class ItemsList extends StatelessWidget {
-  final Future<List<ChecklistItem>> itemsFuture;
+  final List<ChecklistItem> items;
   final Function toggleItem;
 
-  ItemsList(this.itemsFuture, this.toggleItem);
+  ItemsList(this.items, this.toggleItem);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: itemsFuture,
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<List<ChecklistItem>> snapshot,
-      ) {
-        Widget child;
-
-        if (snapshot.hasData) {
-          child = _buildItemsList(snapshot.data);
-        } else if (snapshot.hasError) {
-          print('ERROR: loading checklist items =>\n${snapshot.error}');
-          child = Container(child: Text('Error loading checklist items'));
-        } else {
-          child = Container(); // Loading...
-        }
-
-        return child;
-      },
-    );
-  }
-
-  _buildItemsList(List<ChecklistItem> items) {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int i) {
@@ -44,7 +21,11 @@ class ItemsList extends StatelessWidget {
                 Expanded(
                   // This child fills available space
                   child: ListTile(
-                    title: Text(item.name),
+                    title: Container(
+                      child: Text(item.name),
+                      padding: EdgeInsets.only(top: 8, bottom: 8),
+                    ),
+                    subtitle: item.info.isNotEmpty ? Text(item.info) : null,
                     onTap: () {
                       toggleItem(item);
                     },
@@ -54,11 +35,9 @@ class ItemsList extends StatelessWidget {
                   onPressed: () {
                     toggleItem(item);
                   },
-                  icon: Icon(item.isChecked
-                      ? Icons.check_box
-                      : Icons.check_box_outline_blank),
+                  icon: Icon(item.isChecked ? Icons.check_box : Icons.check_box_outline_blank),
                   color: item.isChecked
-                      ? Colors.lightGreen
+                      ? Color.fromRGBO(15, 169, 138, 1)
                       : Theme.of(context).disabledColor,
                 ),
               ],

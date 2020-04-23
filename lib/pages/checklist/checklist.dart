@@ -15,7 +15,7 @@ class ChecklistPage extends StatefulWidget {
 class ChecklistPageState extends State<ChecklistPage> {
   DB db;
   List<ChecklistSection> _sections = new List();
-  Future<List<ChecklistItem>> _itemsFuture;
+  List<ChecklistItem> _items;
   int _selectedSectionId;
   PageController _pageController;
 
@@ -23,8 +23,9 @@ class ChecklistPageState extends State<ChecklistPage> {
   void initState() {
     super.initState();
 
-    // TODO: preload when app starts up
-    _loadChecklist(context);
+    db = DB(context: context);
+
+    _loadSections();
     _pageController = PageController(
       initialPage: _selectedSectionId ?? 0,
     );
@@ -42,6 +43,7 @@ class ChecklistPageState extends State<ChecklistPage> {
       appBar: AppBar(
         titleSpacing: _selectedSectionId == null ? 16.0 : 0.0,
         title: _makeTitle(),
+        actions: _makeAppBarAction(),
       ),
       body: _makeBody(),
     );
@@ -65,6 +67,21 @@ class ChecklistPageState extends State<ChecklistPage> {
     );
   }
 
+  List<Widget> _makeAppBarAction() {
+    if (_selectedSectionId != null && _sections[_selectedSectionId].info.isNotEmpty) {
+      return [
+        IconButton(
+          icon: Icon(Icons.info_outline),
+          onPressed: () {
+            _showSectionInfo();
+          },
+        ),
+      ];
+    }
+
+    return null;
+  }
+
   Widget _makeBody() {
     if (_sections.isEmpty) return Container();
 
@@ -77,14 +94,12 @@ class ChecklistPageState extends State<ChecklistPage> {
 
         if (_selectedSectionId == null) return Container();
 
-        return ItemsList(_itemsFuture, _toggleItem);
+        return ItemsList(_items, _toggleItem);
       },
     );
   }
 
-  void _loadChecklist(context) async {
-    db = DB(context: context);
-
+  void _loadSections() async {
     List<ChecklistSection> sections = await db.getChecklistSections();
 
     setState(() {
@@ -92,14 +107,35 @@ class ChecklistPageState extends State<ChecklistPage> {
     });
   }
 
+  Future<List<ChecklistItem>> _loadItems(String guid, {bool updateState = true}) async {
+    List<ChecklistItem> items = await db.getChecklistItems(guid);
+
+    if (updateState) {
+      setState(() {
+        _items = items;
+      });
+    }
+
+    return items;
+  }
+
   void _setSelectedSection(String guid) async {
     int sectionId = _sections.indexWhere((section) => section.guid == guid);
 
-    // When animating TO items, set section immediately
+    // When animating TO items, set state immediately
     if (guid.isNotEmpty) {
+      List<ChecklistItem> items = await _loadItems(guid, updateState: false);
+
       setState(() {
-        _itemsFuture = db.getChecklistItems(guid);
+        _items = items;
         _selectedSectionId = sectionId;
+      });
+    }
+
+    // When animating TO sections make sure to update the list first
+    if (guid.isEmpty) {
+      setState(() {
+        _loadSections();
       });
     }
 
@@ -112,10 +148,31 @@ class ChecklistPageState extends State<ChecklistPage> {
     // When animating FROM items, await animation completion (above) before clearing contents
     if (guid.isEmpty) {
       setState(() {
-        _itemsFuture = null;
+        _items = null;
         _selectedSectionId = null;
       });
     }
+  }
+
+  void _showSectionInfo() {
+    ChecklistSection section = _sections[_selectedSectionId];
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(section.name),
+            content: Text(section.info),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Oké'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   void _toggleItem(ChecklistItem item) async {
@@ -124,10 +181,8 @@ class ChecklistPageState extends State<ChecklistPage> {
     item.isChecked = !item.isChecked;
     id = await db.updateItem(item);
 
-    // TODO: better check and error handling
-    // OPTIMIZE: don't update whole list - see if we can update only the one item
     if (id > -1) {
-      _itemsFuture = db.getChecklistItems(item.guid);
+      _loadItems(item.sectionGuid);
     }
   }
 }

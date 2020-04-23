@@ -12,9 +12,8 @@ class SectionList extends StatelessWidget {
     return ListView.builder(
       itemCount: sections.length,
       itemBuilder: (BuildContext context, int i) {
-        int checked = sections[i].itemsChecked;
-        int total = sections[i].itemsTotal;
-        String sectionText = '${sections[i].name} ($checked/$total)';
+        ChecklistSection section = sections[i];
+        String sectionText = '${section.name} (${section.itemsChecked}/${section.itemsTotal})';
 
         return Column(
           children: <Widget>[

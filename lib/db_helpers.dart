@@ -118,8 +118,7 @@ class DB {
   Future _onCreate(Database db, int version) async {
     // Fetch content from JSON
     // OPTIMIZE: combine with json_serializable
-    String data = await DefaultAssetBundle.of(context)
-        .loadString('content/checklist.json');
+    String data = await DefaultAssetBundle.of(context).loadString('content/checklist.json');
 
     List<dynamic> checklist = json.decode(data)['data']['sections'];
 
@@ -201,9 +200,7 @@ class DB {
       ORDER BY $columnSectionPosition;
     ''');
 
-    return dbSections
-        .map((section) => ChecklistSection.fromDBMap(section))
-        .toList();
+    return dbSections.map((section) => ChecklistSection.fromDBMap(section)).toList();
   }
 
   Future<List<ChecklistItem>> getChecklistItems(String sectionGuid) async {
