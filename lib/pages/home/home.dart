@@ -33,11 +33,6 @@ class HomePage extends StatelessWidget {
                       matchTextDirection: true,
                     ),
                   ),
-                  Text(
-                    'adventureshield.nl',
-                    style: TextStyle(color: Color.fromRGBO(15, 169, 138, 1)),
-                    textAlign: TextAlign.center,
-                  ),
                 ],
               ),
             ),
