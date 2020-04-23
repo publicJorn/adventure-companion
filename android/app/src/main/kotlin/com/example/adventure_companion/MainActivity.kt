@@ -1,4 +1,4 @@
-package com.frontrain.adventure_companion
+package net.frontrain.adventure_companion
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

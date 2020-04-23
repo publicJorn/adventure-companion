@@ -10,7 +10,7 @@
 - Open this project in Android Studio
    > Working on another project? See below to set it up
 - Open: View -> Tool Windows -> Device File Explorer
-- Browse to: `/data/data/com.frontrain.adventure_companion/app_flutter/db`
+- Browse to: `/data/data/net.frontrain.adventure_companion/app_flutter/db`
 - Right click on `db` and Save as.. All files are needed for DB Browser
 - Open `adventure_companion.db` in DB Browser
 
