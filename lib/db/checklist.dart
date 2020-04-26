@@ -1,11 +1,9 @@
-import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
 
-// database table and column names
+import './database.dart';
+
 final String tableChecklistSections = 'checklist_sections';
 final String columnSectionGuid = 'guid';
 final String columnSectionPosition = 'position';
@@ -80,42 +78,19 @@ class ChecklistItem {
   }
 }
 
-class DB {
-  BuildContext context;
-  static final _databaseName = 'db/adventure_companion.db';
-  static final _databaseVersion = 1;
+// ----------------------------------------------------------------------------
 
-  // Make this a singleton class - https://stackoverflow.com/questions/12649573/how-do-you-build-a-singleton-in-dart
-  static final DB _instance = DB._singleton();
-  DB._singleton();
+class DBChecklist {
+  Database db;
 
-  factory DB({@required BuildContext context}) {
-    _instance.context = context;
+  DBChecklist._singleton();
+  static final DBChecklist _instance = DBChecklist._singleton();
+
+  factory DBChecklist() {
     return _instance;
   }
 
-  // Database type from sqflite package
-  static Database _database;
-  Future<Database> get database async {
-    if (_database != null) return _database;
-
-    _database = await _initDatabase();
-    return _database;
-  }
-
-  _initDatabase() async {
-    // The path_provider plugin gets the right directory for Android or iOS.
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-
-    return await openDatabase(
-      path,
-      version: _databaseVersion,
-      onCreate: _onCreate,
-    );
-  }
-
-  Future _onCreate(Database db, int version) async {
+  static Future onCreate(Database db, int version, BuildContext context) async {
     // Fetch content from JSON
     // OPTIMIZE: combine with json_serializable
     String data = await DefaultAssetBundle.of(context).loadString('content/checklist.json');
@@ -124,24 +99,24 @@ class DB {
 
     // Create database entries
     await db.execute('''
-      CREATE TABLE $tableChecklistSections (
-        $columnSectionGuid TEXT PRIMARY KEY,
-        $columnSectionPosition INTEGER NOT NULL,
-        $columnSectionName TEXT,
-        $columnSectionInfo TEXT
-      );
-    ''');
+        CREATE TABLE $tableChecklistSections (
+          $columnSectionGuid TEXT PRIMARY KEY,
+          $columnSectionPosition INTEGER NOT NULL,
+          $columnSectionName TEXT,
+          $columnSectionInfo TEXT
+        );
+      ''');
 
     await db.execute('''
-      CREATE TABLE $tableChecklistItems (
-        $columnItemGuid TEXT PRIMARY KEY,
-        $columnItemPosition INTEGER NOT NULL,
-        $columnItemSectionGuid TEXT NOT NULL,
-        $columnItemName TEXT,
-        $columnItemInfo TEXT,
-        $columnItemChecked INTEGER NOT NULL DEFAULT 0
-      );
-    ''');
+        CREATE TABLE $tableChecklistItems (
+          $columnItemGuid TEXT PRIMARY KEY,
+          $columnItemPosition INTEGER NOT NULL,
+          $columnItemSectionGuid TEXT NOT NULL,
+          $columnItemName TEXT,
+          $columnItemInfo TEXT,
+          $columnItemChecked INTEGER NOT NULL DEFAULT 0
+        );
+      ''');
 
     Batch batch = db.batch();
     int sectionIter = 0;
@@ -181,7 +156,7 @@ class DB {
   }
 
   Future<List<ChecklistSection>> getChecklistSections() async {
-    Database db = await database;
+    Database db = await DB.instance.database;
 
     List<Map<String, dynamic>> dbSections = await db.rawQuery('''
       SELECT $tableChecklistSections.*,
@@ -204,7 +179,7 @@ class DB {
   }
 
   Future<List<ChecklistItem>> getChecklistItems(String sectionGuid) async {
-    Database db = await database;
+    Database db = await DB.instance.database;
 
     List<Map<String, dynamic>> dbItems = await db.query(
       tableChecklistItems,
@@ -216,7 +191,7 @@ class DB {
   }
 
   Future<int> updateItem(ChecklistItem item) async {
-    Database db = await database;
+    Database db = await DB.instance.database;
 
     return await db.update(
       tableChecklistItems,

@@ -1,5 +1,6 @@
-import 'package:adventure_companion/db_helpers.dart';
 import 'package:flutter/material.dart';
+
+import 'package:adventure_companion/db/checklist.dart';
 
 class SectionList extends StatelessWidget {
   final List<ChecklistSection> sections;

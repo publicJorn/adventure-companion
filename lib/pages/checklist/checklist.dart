@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-// import 'dart:convert';
 
-import '../../db_helpers.dart';
+import 'package:adventure_companion/db/checklist.dart';
 import 'section_list.dart';
 import 'items_list.dart';
 
@@ -13,7 +12,7 @@ class ChecklistPage extends StatefulWidget {
 }
 
 class ChecklistPageState extends State<ChecklistPage> {
-  DB db;
+  DBChecklist db;
   List<ChecklistSection> _sections = new List();
   List<ChecklistItem> _items;
   int _selectedSectionId;
@@ -23,7 +22,7 @@ class ChecklistPageState extends State<ChecklistPage> {
   void initState() {
     super.initState();
 
-    db = DB(context: context);
+    db = DBChecklist();
 
     _loadSections();
     _pageController = PageController(

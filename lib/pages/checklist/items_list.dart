@@ -1,5 +1,6 @@
-import 'package:adventure_companion/db_helpers.dart';
 import 'package:flutter/material.dart';
+
+import 'package:adventure_companion/db/checklist.dart';
 
 class ItemsList extends StatelessWidget {
   final List<ChecklistItem> items;
