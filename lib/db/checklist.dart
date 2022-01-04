@@ -4,19 +4,21 @@ import 'package:sqflite/sqflite.dart';
 
 import './database.dart';
 
-final String tableChecklistSections = 'checklist_sections';
-final String columnSectionGuid = 'guid';
-final String columnSectionPosition = 'position';
-final String columnSectionName = 'name';
-final String columnSectionInfo = 'info';
+const String tableChecklistSections = 'checklist_sections';
+const String columnSectionGuid = 'guid';
+const String columnSectionPosition = 'position';
+const String columnSectionName = 'name';
+const String columnSectionInfo = 'info';
 
-final String tableChecklistItems = 'checklist_items';
-final String columnItemGuid = 'guid';
-final String columnItemSectionGuid = 'sectionGuid';
-final String columnItemPosition = 'position';
-final String columnItemName = 'name';
-final String columnItemInfo = 'info';
-final String columnItemChecked = 'checked';
+const String tableChecklistItems = 'checklist_items';
+const String columnItemGuid = 'guid';
+const String columnItemSectionGuid = 'sectionGuid';
+const String columnItemPosition = 'position';
+const String columnItemName = 'name';
+const String columnItemInfo = 'info';
+const String columnItemChecked = 'checked';
+
+// -- MODELS ------------------------------------------------------------------
 
 class ChecklistSection {
   String guid;
@@ -78,7 +80,16 @@ class ChecklistItem {
   }
 }
 
-// ----------------------------------------------------------------------------
+// -- GENERIC FUNCTIONS -------------------------------------------------------
+
+Future<Map<String, dynamic>> _fetchJSON(context) async {
+  // Fetch content from JSON
+  // OPTIMIZE: combine with json_serializable
+  String data = await DefaultAssetBundle.of(context).loadString('content/checklist.json');
+  return json.decode(data);
+}
+
+// -- DB HELPERS --------------------------------------------------------------
 
 class DBChecklist {
   Database db;
@@ -91,11 +102,8 @@ class DBChecklist {
   }
 
   static Future onCreate(Database db, int version, BuildContext context) async {
-    // Fetch content from JSON
-    // OPTIMIZE: combine with json_serializable
-    String data = await DefaultAssetBundle.of(context).loadString('content/checklist.json');
-
-    List<dynamic> checklist = json.decode(data)['data']['sections'];
+    Map<String, dynamic> json = await _fetchJSON(context);
+    List<dynamic> checklist = json['data']['sections'];
 
     // Create database entries
     await db.execute('''
@@ -117,6 +125,11 @@ class DBChecklist {
           $columnItemChecked INTEGER NOT NULL DEFAULT 0
         );
       ''');
+
+    db.insert(
+      tableVersions,
+      {columnVersionsSection: 'checklist', columnVersionsVersion: json['version']},
+    );
 
     Batch batch = db.batch();
     int sectionIter = 0;
@@ -155,6 +168,24 @@ class DBChecklist {
     await batch.commit(noResult: true);
   }
 
+  // static Future onUpgrade(
+  //   Batch batch,
+  //   int oldVersion,
+  //   int newVersion,
+  //   BuildContext context,
+  // ) async {
+  //   if (oldVersion == 1 && newVersion == 2) _migrate_1to2(batch, context);
+  // }
+
+  // static Future onDowngrade(
+  //   Batch batch,
+  //   int oldVersion,
+  //   int newVersion,
+  //   BuildContext context,
+  // ) async {
+  //   if (oldVersion == 2 && newVersion == 1) _migrate_2to1(batch, context);
+  // }
+
   Future<List<ChecklistSection>> getChecklistSections() async {
     Database db = await DB.instance.database;
 
@@ -184,7 +215,7 @@ class DBChecklist {
     List<Map<String, dynamic>> dbItems = await db.query(
       tableChecklistItems,
       where: '$columnItemSectionGuid = "$sectionGuid"',
-      orderBy: columnItemPosition,
+      orderBy: columnItemName,
     );
 
     return dbItems.map((item) => ChecklistItem.fromDBMap(item)).toList();
@@ -200,3 +231,37 @@ class DBChecklist {
     );
   }
 }
+
+// -- MIGRATIONS --------------------------------------------------------------
+
+// void _migrate_1to2(Batch batch, BuildContext context) async {
+//   Map<String, dynamic> json = await _fetchJSON(context);
+//   List<dynamic> checklist = json['data']['sections'];
+
+//   batch.insert(
+//     tableVersions,
+//     {columnVersionsSection: 'checklist', columnVersionsVersion: json['version']},
+//   );
+
+//   _overrideNames(batch, checklist);
+// }
+
+// void _migrate_2to1(Batch batch, BuildContext context) async {
+//   Map<String, dynamic> json = await _fetchJSON(context);
+//   List<dynamic> checklist = json['data']['sections'];
+
+//   _overrideNames(batch, checklist);
+// }
+
+// void _overrideNames(batch, checklist) {
+//   checklist.forEach((section) {
+//     section['items'].forEach((item) {
+//       batch.update(
+//         tableChecklistItems,
+//         {columnItemName: item['name']},
+//         where: 'guid = ?',
+//         whereArgs: [item['guid']],
+//       );
+//     });
+//   });
+// }

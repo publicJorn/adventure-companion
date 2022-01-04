@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:adventure_companion/db/database.dart';
 import 'frame.dart';
 
 void main() => runApp(App());
@@ -7,6 +8,9 @@ void main() => runApp(App());
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Initialise DB
+    DB(context: context).database;
+
     final String appTitle = 'Adventure Companion';
 
     return MaterialApp(
